@@ -1,5 +1,5 @@
 import z from "zod";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-location";
 import "./App.css";
 
@@ -57,8 +57,24 @@ const useCharacters = () => {
   });
 };
 
+export const fetchCharactersInfinite = async ({ pageParam = 1 }) => {
+  return (await fetch(
+    `https://rickandmortyapi.com/api/character/?page=${pageParam}`
+  ).then((result) => result.json())) as allCharacters;
+};
+
 function App() {
-  const { status, data } = useCharacters();
+  const { data, status, fetchNextPage, hasNextPage } = useInfiniteQuery({
+    queryFn: fetchCharactersInfinite,
+    queryKey: ["characters"],
+    getNextPageParam: (lastPage, pages) => {
+      if (pages.length < lastPage?.info?.pages) {
+        return pages.length + 1;
+      }
+
+      return undefined;
+    },
+  });
 
   if (status === "loading") {
     return <h1>"...loading"</h1>;
@@ -71,14 +87,26 @@ function App() {
   return (
     <div className="App">
       <ul>
-        {data.results.map((character) => {
-          return (
-            <li key={character.id}>
-              <Link to={`/character/${character.id}`}>{character.name}</Link>
-            </li>
-          );
+        {data?.pages.map((page) => {
+          return page?.results?.map((character) => {
+            return (
+              <li key={character.id}>
+                <Link to={`/character/${character.id}`}>{character.name}</Link>
+              </li>
+            );
+          });
         })}
       </ul>
+
+      {hasNextPage && (
+        <button
+          onClick={() =>
+            fetchNextPage({ pageParam: data?.pages?.length! + 1 || 1 })
+          }
+        >
+          Load more
+        </button>
+      )}
     </div>
   );
 }

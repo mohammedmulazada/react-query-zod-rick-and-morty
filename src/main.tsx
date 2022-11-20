@@ -12,7 +12,7 @@ import {
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import App, { fetchCharacters } from "./App";
+import App, { fetchCharactersInfinite } from "./App";
 import { CharacterDetail, fetchCharacter } from "./CharacterDetail";
 
 import "./index.css";
@@ -31,7 +31,10 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
             element: <App />,
             loader: () =>
               queryClient.getQueryData(["characters"]) ??
-              queryClient.fetchQuery(["characters"], fetchCharacters),
+              queryClient.fetchInfiniteQuery(
+                ["characters"],
+                fetchCharactersInfinite
+              ),
           },
           {
             path: "/character/:characterId",

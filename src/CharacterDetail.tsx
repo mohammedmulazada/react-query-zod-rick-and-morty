@@ -19,7 +19,7 @@ export const fetchCharacter = async (id: string) => {
   return response as CharacterType;
 };
 
-const useCharacters = (id: string) => {
+const useCharacter = (id: string) => {
   return useQuery(["characters", id], () => fetchCharacter(id));
 };
 
@@ -28,7 +28,7 @@ export const CharacterDetail = () => {
     params: { characterId },
   } = useMatch();
 
-  const { data } = useCharacters(characterId);
+  const { data } = useCharacter(characterId);
 
   return (
     <main>
