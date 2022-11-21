@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Link, useMatch } from "@tanstack/react-location";
+import { useMatch } from "@tanstack/react-location";
 import { useQuery } from "@tanstack/react-query";
 import { characterSchema } from "./App";
 
@@ -32,7 +32,6 @@ export const CharacterDetail = () => {
 
   return (
     <main>
-      <Link to={"/"}>Go back</Link>
       <h1>{data?.name}</h1>
       <img src={data?.image} alt={data?.name} />
     </main>

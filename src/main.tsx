@@ -37,17 +37,25 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               ),
           },
           {
-            path: "/character/",
-            element: <h1>Hey, you are missing a character id in the URL.</h1>,
-          },
-          {
-            path: "/character/:characterId",
-            element: <CharacterDetail />,
-            loader: ({ params: { characterId } }) =>
-              queryClient.getQueryData(["characters", characterId]) ??
-              queryClient.fetchQuery(["characters", characterId], () =>
-                fetchCharacter(characterId)
-              ),
+            path: "character",
+            element: (
+              <>
+                <Link to={"/"}>Go back</Link>
+                <Outlet />
+              </>
+            ),
+            children: [
+              { path: "/", element: <h1>You forgot to provide an id!</h1> },
+              {
+                path: ":characterId",
+                element: <CharacterDetail />,
+                loader: ({ params: { characterId } }) =>
+                  queryClient.getQueryData(["characters", characterId]) ??
+                  queryClient.fetchQuery(["characters", characterId], () =>
+                    fetchCharacter(characterId)
+                  ),
+              },
+            ],
           },
         ]}
       />
