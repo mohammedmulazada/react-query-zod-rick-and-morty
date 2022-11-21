@@ -37,6 +37,10 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
               ),
           },
           {
+            path: "/character/",
+            element: <h1>Hey, you are missing a character id in the URL.</h1>,
+          },
+          {
             path: "/character/:characterId",
             element: <CharacterDetail />,
             loader: ({ params: { characterId } }) =>
